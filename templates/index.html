@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Agentic Intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Load premium fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Highlight.js dark theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+</head>
+
+<body>
+    <div class="app-background">
+        <div class="gradient-sphere one"></div>
+        <div class="gradient-sphere two"></div>
+    </div>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <i class="fa-solid fa-network-wired logo-icon"></i>
+                    <span>NEXUS AI</span>
+                </div>
+            </div>
+            <div class="sidebar-content">
+                <button class="new-chat-btn">
+                    <i class="fa-solid fa-plus"></i> New Thread
+                </button>
+                <div class="sidebar-section">
+                    <h3>Recent Architecture</h3>
+                    <div class="history-list">
+                        <div class="history-item active">
+                            <i class="fa-regular fa-message"></i> Qwen 3.5 Session
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Developer Node</span>
+                        <span class="user-status"><span class="status-dot"></span> Online</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <header class="chat-header">
+                <div class="header-info">
+                    <h2>Advanced Reasoning Engine</h2>
+                    <p class="model-info">
+                        <i class="fa-solid fa-bolt"></i> Qwen 3.5 (397B) · Fluid Processing
+                    </p>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" title="System Info"><i class="fa-solid fa-circle-info"></i></button>
+                </div>
+            </header>
+
+            <div class="messages-wrapper" id="chatMessages">
+                <div class="message ai">
+                    <div class="msg-avatar ai-avatar"><i class="fa-solid fa-network-wired"></i></div>
+                    <div class="msg-content">
+                        <div class="msg-name">Nexus Response</div>
+                        <div class="msg-text">
+                            <p>Initialization complete. I am online and directly connected to the LLM agentic node.</p>
+                            <p>My interface is now fully optimized. How can I assist you with your task?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="attachment-preview" id="attachmentPreview" style="display: none;">
+                    <div class="attachment-item">
+                        <i id="attachmentIcon" class="fa-solid fa-file-pdf"></i>
+                        <span class="attachment-name" id="attachmentName">document.pdf</span>
+                        <button class="remove-attachment" id="removeAttachment"><i
+                                class="fa-solid fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="input-container glow-border">
+                    <textarea id="userInput" placeholder="Deploy instructions to agent..." rows="1"></textarea>
+                    <div class="input-actions" style="display: flex; gap: 8px;">
+                        <button id="attachBtn" title="Upload Image or PDF"
+                            style="background: transparent; color: var(--text-secondary); width: 44px; height: 44px; border: none; font-size: 1.2rem; cursor: pointer; transition: color 0.2s;">
+                            <i class="fa-solid fa-paperclip"></i>
+                        </button>
+                        <input type="file" id="fileInput" accept="image/*,.pdf" style="display: none;">
+                        <button id="sendBtn" title="Transmit">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-footer">
+                    Agent processes queries live via Neural Pathways. Press Shift + Enter for new lines.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts for Markdown parsing and Code Highlighting -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
