@@ -225,7 +225,7 @@ function createMessageElement(sender, text) {
     if (sender === 'user') {
         avatarHtml = `<div class="msg-avatar user-avatar-msg"><i class="fa-solid fa-user"></i></div>`;
     } else {
-        avatarHtml = `<div class="msg-avatar ai-avatar"><i class="fa-solid fa-network-wired"></i></div>`;
+        avatarHtml = `<div class="msg-avatar ai-avatar"><i class="fa-solid fa-om"></i></div>`;
     }
 
     let contentHtml = '';
@@ -248,7 +248,7 @@ function createMessageElement(sender, text) {
     div.innerHTML = `
         ${avatarHtml}
         <div class="msg-content">
-            ${sender === 'ai' ? '<div class="msg-name">Nexus Response</div>' : `<div class="msg-name">Developer Node</div>`}
+            ${sender === 'ai' ? '<div class="msg-name">VishtaarAi Response</div>' : `<div class="msg-name">Developer Node</div>`}
             ${contentHtml}
         </div>
     `;

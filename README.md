@@ -1,4 +1,4 @@
-# Nexus | Agentic Intelligence
+# VishtaarAi | Agentic Intelligence
 
 A premium, immersive Agentic AI interface featuring real-time AI responses, image and PDF support, Markdown rendering, and code highlighting, all streaming live via Nvidia's high-performance APIs.
 
