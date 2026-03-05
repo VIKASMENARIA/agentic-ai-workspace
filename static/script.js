@@ -1,11 +1,27 @@
 // Configuration for Marked.js and Highlight.js
+const renderer = new marked.Renderer();
+renderer.code = function (code, language) {
+    const validLanguage = (language && hljs.getLanguage(language)) ? language : 'plaintext';
+    let highlightedCode;
+    try {
+        highlightedCode = hljs.highlight(code, { language: validLanguage }).value;
+    } catch (e) {
+        highlightedCode = hljs.highlightAuto(code).value;
+    }
+
+    return `<div class="code-wrapper">
+        <div class="code-header">
+            <span class="code-lang">${language || 'code'}</span>
+            <button class="copy-btn">
+                <i class="fa-regular fa-copy"></i> Copy
+            </button>
+        </div>
+        <pre><code class="hljs ${validLanguage}">${highlightedCode}</code></pre>
+    </div>`;
+};
+
 marked.setOptions({
-    highlight: function (code, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-            try { return hljs.highlight(code, { language: lang }).value; } catch (e) { }
-        }
-        return hljs.highlightAuto(code).value;
-    },
+    renderer: renderer,
     breaks: true,
     gfm: true
 });
@@ -197,11 +213,6 @@ async function sendMessage() {
         contentEl.innerHTML = DOMPurify.sanitize(marked.parse(fullText));
         messageHistory.push({ role: "assistant", content: fullText });
 
-        // Highlight newly added code blocks
-        contentEl.querySelectorAll('pre code').forEach((block) => {
-            hljs.highlightElement(block);
-        });
-
     } catch (error) {
         console.error('Fetch Error:', error);
         contentEl.innerHTML = `<p style="color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3);">Connection to inference node degraded or failed. Check the server terminal.</p>`;
@@ -266,4 +277,25 @@ document.head.appendChild(style);
 
 window.addEventListener('DOMContentLoaded', () => {
     userInput.focus();
+});
+
+// Event delegation for copy buttons
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.copy-btn');
+    if (btn) {
+        const codeWrapper = btn.closest('.code-wrapper');
+        if (codeWrapper) {
+            const codeBlock = codeWrapper.querySelector('code');
+            const text = codeBlock.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHtml = '<i class="fa-regular fa-copy"></i> Copy';
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    }
 });
