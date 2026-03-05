@@ -915,19 +915,102 @@ textarea::placeholder {
 }
 
 @media (max-width: 900px) {
+    .app-layout {
+        padding: 0;
+        gap: 0;
+    }
+
+    .chat-main {
+        border-radius: 0;
+        border: none;
+    }
+
     .sidebar {
         display: none;
     }
 
     .chat-header {
-        padding: 0 24px;
+        padding: 0 20px;
+        height: 70px;
+    }
+
+    .title-serif {
+        font-size: 1.2rem;
+    }
+
+    .model-info {
+        font-size: 0.75rem;
     }
 
     .messages-wrapper {
-        padding: 30px 24px 120px;
+        padding: 20px 16px 120px;
+        gap: 24px;
+    }
+
+    .message {
+        gap: 12px;
+    }
+
+    .message.ai .msg-content {
+        padding: 16px 20px;
+    }
+
+    .message.user .msg-content {
+        padding: 14px 18px;
+    }
+
+    .msg-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        border-radius: 12px;
     }
 
     .input-area {
-        padding: 0 20px 20px;
+        padding: 0 12px 16px;
+    }
+
+    .input-container {
+        padding: 8px 12px;
+        border-radius: 20px;
+    }
+
+    textarea {
+        font-size: 1rem;
+        padding: 8px 6px;
+    }
+
+    .send-btn,
+    .attach-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-serif {
+        font-size: 1.05rem;
+    }
+
+    .msg-text {
+        font-size: 1rem;
+    }
+
+    .msg-name {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+
+    .header-info p {
+        display: none;
+        /* Hide the smaller subtitle if space is too tight */
+    }
+
+    .header-actions .icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
     }
 }
