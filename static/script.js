@@ -1,12 +1,19 @@
 // Configuration for Marked.js and Highlight.js
 const renderer = new marked.Renderer();
-renderer.code = function (code, language) {
+renderer.code = function (arg1, arg2) {
+    let code = typeof arg1 === 'object' ? arg1.text : arg1;
+    let language = typeof arg1 === 'object' ? arg1.lang : arg2;
+    code = code || '';
     const validLanguage = (language && hljs.getLanguage(language)) ? language : 'plaintext';
     let highlightedCode;
     try {
         highlightedCode = hljs.highlight(code, { language: validLanguage }).value;
     } catch (e) {
-        highlightedCode = hljs.highlightAuto(code).value;
+        try {
+            highlightedCode = hljs.highlightAuto(code).value;
+        } catch (err) {
+            highlightedCode = code; // ultimate fallback
+        }
     }
 
     return `<div class="code-wrapper">
@@ -182,27 +189,38 @@ async function sendMessage() {
                         break;
                     }
                     if (dataStr) {
+                        let data;
                         try {
-                            const data = JSON.parse(dataStr);
-
-                            if (data.choices && data.choices[0].delta && data.choices[0].delta.content) {
-                                if (firstChunk) {
-                                    contentEl.innerHTML = '';
-                                    firstChunk = false;
-                                }
-                                fullText += data.choices[0].delta.content;
-
-                                // Render safe markdown on the fly with a blinking cursor
-                                const rawHtml = marked.parse(fullText);
-                                contentEl.innerHTML = DOMPurify.sanitize(rawHtml) + '<span class="cursor" style="display:inline-block;width:8px;height:1.1em;background:#6366f1;animation:blink 1s step-end infinite;vertical-align:middle;margin-left:4px;border-radius:2px;box-shadow:0 0 8px rgba(99,102,241,0.8);"></span>';
-
-                                scrollToBottom();
-                            } else if (data.error) {
-                                fullText += "\n\n**Error:** " + data.error;
-                                contentEl.innerHTML = DOMPurify.sanitize(marked.parse(fullText));
-                            }
+                            data = JSON.parse(dataStr);
                         } catch (e) {
                             // Silently suppress JSON parse errors for incomplete chunks
+                            continue;
+                        }
+
+                        if (data.choices && data.choices[0].delta && data.choices[0].delta.content) {
+                            if (firstChunk) {
+                                contentEl.innerHTML = '';
+                                firstChunk = false;
+                            }
+                            fullText += data.choices[0].delta.content;
+
+                            try {
+                                // Render safe markdown on the fly with a blinking cursor
+                                const rawHtml = marked.parse(fullText);
+                                contentEl.innerHTML = DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['class', 'target'], ADD_TAGS: ['iframe'] }) + '<span class="cursor" style="display:inline-block;width:8px;height:1.1em;background:#6366f1;animation:blink 1s step-end infinite;vertical-align:middle;margin-left:4px;border-radius:2px;box-shadow:0 0 8px rgba(99,102,241,0.8);"></span>';
+
+                                scrollToBottom();
+                            } catch (err) {
+                                console.error("Markdown parse error:", err);
+                                contentEl.innerText = fullText;
+                            }
+                        } else if (data.error) {
+                            fullText += "\n\n**Error:** " + data.error;
+                            try {
+                                contentEl.innerHTML = DOMPurify.sanitize(marked.parse(fullText));
+                            } catch (err) {
+                                contentEl.innerText = fullText;
+                            }
                         }
                     }
                 }
@@ -210,7 +228,11 @@ async function sendMessage() {
         }
 
         // Finalize (remove cursor)
-        contentEl.innerHTML = DOMPurify.sanitize(marked.parse(fullText));
+        try {
+            contentEl.innerHTML = DOMPurify.sanitize(marked.parse(fullText));
+        } catch (err) {
+            contentEl.innerText = fullText;
+        }
         messageHistory.push({ role: "assistant", content: fullText });
 
     } catch (error) {
@@ -286,8 +308,9 @@ document.addEventListener('click', function (e) {
         const codeWrapper = btn.closest('.code-wrapper');
         if (codeWrapper) {
             const codeBlock = codeWrapper.querySelector('code');
-            const text = codeBlock.innerText;
-            navigator.clipboard.writeText(text).then(() => {
+            const text = codeBlock.innerText || codeBlock.textContent;
+
+            const showCopied = () => {
                 const originalHtml = '<i class="fa-regular fa-copy"></i> Copy';
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
                 btn.classList.add('copied');
@@ -295,7 +318,36 @@ document.addEventListener('click', function (e) {
                     btn.innerHTML = originalHtml;
                     btn.classList.remove('copied');
                 }, 2000);
-            });
+            };
+
+            const fallbackCopyTextToClipboard = () => {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.top = "0";
+                textArea.style.left = "0";
+                textArea.style.position = "fixed";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) showCopied();
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                }
+                document.body.removeChild(textArea);
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopied();
+                }).catch(err => {
+                    console.error("Async clipboard failed, using fallback:", err);
+                    fallbackCopyTextToClipboard();
+                });
+            } else {
+                fallbackCopyTextToClipboard();
+            }
         }
     }
 });
