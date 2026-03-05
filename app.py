@@ -3,12 +3,17 @@ import requests
 import json
 import PyPDF2
 from flask import Flask, render_template, request, Response, jsonify
+from openai import OpenAI
 
 app = Flask(__name__)
 
 # Nvidia API Key from user
-NVAPI_KEY = "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"
-INVOKE_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
+NVAPI_KEY = "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"
+
+client = OpenAI(
+  base_url = "https://integrate.api.nvidia.com/v1",
+  api_key = NVAPI_KEY
+)
 
 @app.route('/')
 def home():
@@ -42,37 +47,25 @@ def chat():
     if not messages:
         return jsonify({"error": "No messages provided"}), 400
 
-    headers = {
-        "Authorization": f"Bearer {NVAPI_KEY}",
-        "Accept": "text/event-stream"
-    }
-
-    payload = {
-        "model": "qwen/qwen3.5-397b-a17b",
-        "messages": messages,
-        "max_tokens": 1024,
-        "temperature": 0.60,
-        "top_p": 0.95,
-        "top_k": 20,
-        "presence_penalty": 0,
-        "repetition_penalty": 1,
-        "stream": True,
-        "chat_template_kwargs": {"enable_thinking": True},
-    }
+    # Add the requested system message
+    messages.insert(0, {"role":"system","content":"/think"})
 
     def generate():
         try:
-            response = requests.post(INVOKE_URL, headers=headers, json=payload, stream=True)
-            # Check for non-200 responses
-            if response.status_code != 200:
-                yield f"data: {json.dumps({'error': f'API Error {response.status_code}: {response.text}'})}\n\n"
-                return
+            completion = client.chat.completions.create(
+              model="nvidia/llama-3.3-nemotron-super-49b-v1.5",
+              messages=messages,
+              temperature=0.6,
+              top_p=0.95,
+              max_tokens=65536,
+              frequency_penalty=0,
+              presence_penalty=0,
+              stream=True
+            )
 
-            for line in response.iter_lines():
-                if line:
-                    decoded = line.decode('utf-8')
-                    # Forward SSE exactly as returned by the API
-                    yield f"{decoded}\n\n"
+            for chunk in completion:
+                if chunk.choices[0].delta.content is not None:
+                    yield f"data: {chunk.model_dump_json()}\n\n"
         except Exception as e:
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
 

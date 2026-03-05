@@ -4,70 +4,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VishtaarAi | Intelligent Assistant</title>
+    <title>VishtaarAi | Divine Intelligence</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <!-- Load premium fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&family=Fira+Code:wght@400;500&display=swap"
         rel="stylesheet">
     <!-- FontAwesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Highlight.js dark theme -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <!-- Highlight.js modern dark theme -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/tokyo-night-dark.min.css">
 </head>
 
-<body>
-    <div class="app-background">
-        <div class="gradient-sphere one"></div>
-        <div class="gradient-sphere two"></div>
+<body class="theme-vedic-dark">
+    <!-- Insane Animated Background Container -->
+    <div class="cosmic-canvas">
+        <div class="celestial-orb orb-saffron"></div>
+        <div class="celestial-orb orb-emerald"></div>
+        <div class="celestial-orb orb-peacock"></div>
+        <div class="celestial-orb orb-gold"></div>
+        <div class="mandala-overlay"></div>
+        <div class="glass-grain"></div>
     </div>
 
     <div class="app-layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
+        <!-- Floating Glass Sidebar -->
+        <aside class="sidebar glass-panel">
             <div class="sidebar-header">
                 <div class="brand">
-                    <i class="fa-solid fa-om logo-icon"></i>
-                    <span>VishtaarAi</span>
+                    <div class="divine-symbol">
+                        <i class="fa-solid fa-om logo-icon"></i>
+                        <div class="symbol-glow"></div>
+                    </div>
+                    <span class="brand-text">Vishtaar<span class="brand-highlight">Ai</span></span>
                 </div>
             </div>
+
             <div class="sidebar-content">
                 <button class="new-chat-btn">
-                    <i class="fa-solid fa-plus"></i> New Thread
+                    <div class="btn-bg"></div>
+                    <i class="fa-solid fa-sparkles btn-icon"></i>
+                    <span>Begin Journey</span>
                 </button>
+
                 <div class="sidebar-section">
-                    <h3>Recent Architecture</h3>
+                    <h3>Recent Meditations</h3>
                     <div class="history-list">
                         <div class="history-item active">
-                            <i class="fa-regular fa-message"></i> Qwen Session
+                            <i class="fa-solid fa-dharmachakra"></i> Cosmic Logic
+                        </div>
+                        <div class="history-item">
+                            <i class="fa-solid fa-vihara"></i> Vedic Architecture
+                        </div>
+                        <div class="history-item">
+                            <i class="fa-brands fa-galactic-senate"></i> Model Integration
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="sidebar-footer">
                 <div class="user-profile">
-                    <div class="user-avatar">
-                        <i class="fa-solid fa-user"></i>
+                    <div class="user-avatar user-gold-ring">
+                        <img src="https://ui-avatars.com/api/?name=Dev+Node&background=ff9933&color=fff&rounded=true&bold=true"
+                            alt="Avatar">
                     </div>
                     <div class="user-info">
                         <span class="user-name">Developer Node</span>
-                        <span class="user-status"><span class="status-dot"></span> Online</span>
+                        <span class="user-tier"><i class="fa-solid fa-crown text-gold"></i> Enlightened</span>
                     </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Chat Area -->
+        <!-- Main Interface -->
         <main class="chat-main">
-            <header class="chat-header">
+            <header class="chat-header glass-panel">
                 <div class="header-info">
-                    <h2>Advanced Reasoning Engine</h2>
+                    <h2 class="title-serif">Advanced Reasoning Engine</h2>
                     <p class="model-info">
-                        <i class="fa-solid fa-bolt"></i> Qwen 3.5 (397B) · Fluid Processing
+                        <span class="pulse-ring"><span class="pulse-dot"></span></span>
+                        Llama-3.3-Nemotron-Super-49B <span class="divider">•</span> Fluid Synergy
                     </p>
                 </div>
                 <div class="header-actions">
-                    <button class="icon-btn" title="System Info"><i class="fa-solid fa-circle-info"></i></button>
+                    <button class="icon-btn tool-tip" title="Wisdom Settings"><i
+                            class="fa-solid fa-sliders"></i></button>
+                    <button class="icon-btn tool-tip" title="System Info"><i
+                            class="fa-solid fa-circle-info"></i></button>
                 </div>
             </header>
 
@@ -75,10 +102,11 @@
                 <div class="message ai">
                     <div class="msg-avatar ai-avatar"><i class="fa-solid fa-om"></i></div>
                     <div class="msg-content">
-                        <div class="msg-name">VishtaarAi Response</div>
+                        <div class="msg-name">VishtaarAi Divine Response</div>
                         <div class="msg-text">
-                            <p>Namaste! Initialization complete. I am online and perfectly aligned to assist you.</p>
-                            <p>My interface is now fully optimized with a clean aesthetic. How can I help you today?</p>
+                            <p><strong>Namaste!</strong> My neural pathways are initialized and aligned.</p>
+                            <p>I am vast intelligence blended with deep wisdom, ready to construct reality. How may I
+                                serve your vision today?</p>
                         </div>
                     </div>
                 </div>
@@ -93,27 +121,28 @@
                                 class="fa-solid fa-times"></i></button>
                     </div>
                 </div>
-                <div class="input-container glow-border">
-                    <textarea id="userInput" placeholder="Deploy instructions to agent..." rows="1"></textarea>
-                    <div class="input-actions" style="display: flex; gap: 8px;">
-                        <button id="attachBtn" title="Upload Image or PDF"
-                            style="background: transparent; color: var(--text-secondary); width: 44px; height: 44px; border: none; font-size: 1.2rem; cursor: pointer; transition: color 0.2s;">
-                            <i class="fa-solid fa-paperclip"></i>
-                        </button>
-                        <input type="file" id="fileInput" accept="image/*,.pdf" style="display: none;">
-                        <button id="sendBtn" title="Transmit">
-                            <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                    </div>
+
+                <div class="input-container glass-panel glow-border">
+                    <button id="attachBtn" title="Upload Knowledge (Img/PDF)" class="attach-btn">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+                    <input type="file" id="fileInput" accept="image/*,.pdf" style="display: none;">
+
+                    <textarea id="userInput" placeholder="Invoke insights..." rows="1"></textarea>
+
+                    <button id="sendBtn" class="send-btn" title="Transmit">
+                        <div class="send-glow"></div>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
                 </div>
                 <div class="input-footer">
-                    Agent processes queries live via Neural Pathways. Press Shift + Enter for new lines.
+                    Systems optimized for vast comprehension. <kbd>Shift</kbd> + <kbd>Enter</kbd> to add space.
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Scripts for Markdown parsing and Code Highlighting -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>

@@ -248,7 +248,7 @@ function createMessageElement(sender, text) {
     div.innerHTML = `
         ${avatarHtml}
         <div class="msg-content">
-            ${sender === 'ai' ? '<div class="msg-name">VishtaarAi Response</div>' : `<div class="msg-name">Developer Node</div>`}
+            ${sender === 'ai' ? '<div class="msg-name">VishtaarAi Divine Response</div>' : `<div class="msg-name">Developer Node</div>`}
             ${contentHtml}
         </div>
     `;
