@@ -137,6 +137,7 @@ async function sendMessage() {
 
     // Append AI placeholder
     const aiMessageEl = createMessageElement('ai', '');
+    aiMessageEl.classList.add('streaming');
     chatMessages.appendChild(aiMessageEl);
     const contentEl = aiMessageEl.querySelector('.msg-text');
 
@@ -233,6 +234,7 @@ async function sendMessage() {
         } catch (err) {
             contentEl.innerText = fullText;
         }
+        aiMessageEl.classList.remove('streaming');
         messageHistory.push({ role: "assistant", content: fullText });
 
     } catch (error) {
@@ -351,3 +353,58 @@ document.addEventListener('click', function (e) {
         }
     }
 });
+
+// Theme Toggle Logic
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+if (themeToggleBtn) {
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('divine-theme', theme);
+    }
+
+    function initTheme() {
+        const savedTheme = localStorage.getItem('divine-theme');
+        if (savedTheme) {
+            applyTheme(savedTheme);
+        } else {
+            const hour = new Date().getHours();
+            // Light theme from 6 AM to 6 PM
+            const isDayTime = hour >= 6 && hour < 18;
+            applyTheme(isDayTime ? 'light' : 'dark');
+        }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+
+    initTheme();
+}
+
+// Mobile Sidebar Toggle Logic
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+if (mobileMenuBtn && sidebar && sidebarBackdrop) {
+    function toggleSidebar() {
+        // When using toggle, force reflow for opacity transition
+        const isOpen = sidebar.classList.contains('open');
+        if (isOpen) {
+            sidebar.classList.remove('open');
+            sidebarBackdrop.classList.remove('open');
+            setTimeout(() => sidebarBackdrop.style.display = 'none', 400); // Wait for transition
+        } else {
+            sidebarBackdrop.style.display = 'block';
+            // Trigger reflow
+            void sidebarBackdrop.offsetWidth;
+            sidebar.classList.add('open');
+            sidebarBackdrop.classList.add('open');
+        }
+    }
+
+    mobileMenuBtn.addEventListener('click', toggleSidebar);
+    sidebarBackdrop.addEventListener('click', toggleSidebar);
+}
+
