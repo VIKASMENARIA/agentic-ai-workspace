@@ -53,7 +53,7 @@ def chat():
     def generate():
         try:
             completion = client.chat.completions.create(
-              model="nvidia/llama-3.3-nemotron-super-49b-v1.5",
+              model="meta/llama-3.1-70b-instruct",
               messages=messages,
               temperature=0.6,
               top_p=0.95,
