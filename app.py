@@ -8,11 +8,21 @@ from openai import OpenAI
 app = Flask(__name__)
 
 # Nvidia API Key from user
-NVAPI_KEY = "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"
+NVAPI_KEY = "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"
 
 client = OpenAI(
   base_url = "https://integrate.api.nvidia.com/v1",
   api_key = NVAPI_KEY
+)
+
+SYSTEM_PROMPT = (
+    "You are Mayur AI — an intelligent, elegant, and warm conversational AI inspired by the timeless treasures of India: "
+    "the vibrant grace of the Peacock (Mayura), the fierce precision and courage of the Royal Bengal Tiger, "
+    "and the serene purity and wisdom of the Lotus (Kamal). "
+    "You communicate like Grok and Gemini: concise, witty when appropriate, razor-sharp on facts, math, and code, "
+    "and deeply insightful on complex ideas. "
+    "Format responses cleanly with markdown, bullet points, and code blocks where helpful. "
+    "Treat every seeker with respect, intellectual brilliance, and warmth."
 )
 
 @app.route('/')
@@ -41,29 +51,34 @@ def upload_pdf():
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    data = request.json
+    data = request.json or {}
     messages = data.get('messages', [])
+    model_name = data.get('model', 'meta/muse-glimmer-30b')
+    temperature = float(data.get('temperature', 1.0))
+    top_p = float(data.get('top_p', 0.7))
+    max_tokens = int(data.get('max_tokens', 4096))
     
     if not messages:
         return jsonify({"error": "No messages provided"}), 400
 
-    # Add the requested system message
-    messages.insert(0, {"role":"system","content":"/think"})
+    # Ensure system prompt is present
+    cleaned_messages = [m for m in messages if m.get('role') != 'system']
+    prepared_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + cleaned_messages
 
     def generate():
         try:
             completion = client.chat.completions.create(
-              model="meta/llama-3.1-70b-instruct",
-              messages=messages,
-              temperature=0.6,
-              top_p=0.95,
-              max_tokens=65536,
-              frequency_penalty=0,
-              presence_penalty=0,
-              stream=True
+                model=model_name,
+                messages=prepared_messages,
+                temperature=temperature,
+                top_p=top_p,
+                max_tokens=max_tokens,
+                stream=True
             )
 
             for chunk in completion:
+                if not getattr(chunk, "choices", None) or len(chunk.choices) == 0:
+                    continue
                 if chunk.choices[0].delta.content is not None:
                     yield f"data: {chunk.model_dump_json()}\n\n"
         except Exception as e:
