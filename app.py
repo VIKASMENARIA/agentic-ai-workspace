@@ -8,7 +8,7 @@ from openai import OpenAI
 app = Flask(__name__)
 
 # Nvidia API Key from user
-NVAPI_KEY = "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"
+NVAPI_KEY = "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"
 
 client = OpenAI(
   base_url = "https://integrate.api.nvidia.com/v1",
